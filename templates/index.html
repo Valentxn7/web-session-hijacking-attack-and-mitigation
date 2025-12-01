@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hub</title>
+    </head>
+    <body>
+
+        {% if message %}
+            <h1 style="color:red;">{{ message }}</h1>
+        {% endif %}
+
+        {% if user %}
+            <h2>Bienvenue, {{ user.email }}!</h2>
+        {% else %}
+            <h2>Bienvenue, inconnue !</h2>
+            <a href="/login"><h2>Peut-être vous connecter ?</h2></a>
+        {% endif %}
+
+        {% if user %}
+            <h2>Voici vos informations :</h2>
+
+        {% else %}
+            <h2>🦦</h2>
+            <div>
+                <video autoplay muted loop playsinline style="max-width: 900px; height: auto; display: block;">
+                    <source src="/static/otter.webm" type="video/webm">
+                </video>
+            </div>
+        {% endif %}
+
+        {% if user %}
+            <a href="/logout"><h2>Se déconnecter</h2></a>
+        {% endif %}
+    </body>
+</html>

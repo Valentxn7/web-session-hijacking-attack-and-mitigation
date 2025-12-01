@@ -1,20 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
 <body>
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-        <label>Email:</label>
-        <input type="email" name="email" required>
-        <br>
-        <label>Password:</label>
-        <input type="password" name="password" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
+<h2>Login</h2>
+<form action="/login" method="POST">
+    <label>Email:</label>
+    <input type="email" name="email" required
+           oninvalid="this.setCustomValidity('Veuillez entrer un email valide')"
+           oninput="this.setCustomValidity('')"
+           title="Format : exemple@domaine.com">
+    <br>
+    <label>Password:</label>
+    <input type="password" name="password" required
+           oninvalid="this.setCustomValidity('Veuillez entrer un mot de passe valide')"
+           oninput="this.setCustomValidity('')"
+           title="Format : motdepasse123">
+    <br>
+    <button type="submit">Login</button>
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+</form>
 </body>
 </html>
