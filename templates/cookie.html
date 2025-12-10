@@ -9,7 +9,7 @@
 
         {% if cookie %}
             {% for key, value in cookie.items() %}
-                {{ key }} : {{ value }}   --- END --- <br>
+                {{ key }} : {{ value }}  <br> --- END --- <br><br>
             {% endfor %}
         {% else %}
             <h1 style="color:red;">Aucun cookie détecté.</h1>

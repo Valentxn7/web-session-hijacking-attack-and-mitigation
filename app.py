@@ -19,18 +19,19 @@ app.config['JWT_LIFETIME'] = 3600
 users: list[object] = []
 user_email_index = {}
 user_uid_index = {}
-jour = 28
+jour: int = 28
 MESSAGE_JOUR_EMPTY: str = "Pas de message du jour, rajouter en un !"
-EDITEUR_JOUR_EMPTY: str = None
-message_jour_dict: dict[int, tuple[str, str]] = dict()
+EDITEUR_JOUR_EMPTY: str | None = None
+message_jour_dict: dict[int, tuple[str, str | None]] = dict()
 
-for nb_jour in range(0, 31):
+for nb_jour in range(0, 31 + 1):
     message_jour_dict[nb_jour] = (MESSAGE_JOUR_EMPTY, EDITEUR_JOUR_EMPTY)
 
 
 #########################
 #    MESSAGE DU JOUR
 #########################
+
 def get_message_jour_cont():
     global jour
     message = message_jour_dict[jour][0]
@@ -127,7 +128,6 @@ def set_jwt_by_level(response, key, value, level):
             'samesite': None,
         },
         2: {  # Niveau 2 : HttpOnly activé
-
             'httponly': True,
             'secure': False,
             'samesite': None,
@@ -241,7 +241,7 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = get_user_from_jwt()
         if token is None:
-            return render_template('index.html', message='Veuillez vous connecter !'), 401
+            return render_template('indexV3.html', message='Veuillez vous connecter !'), 401
         security_level = get_security_level()
         return f(token, security_level, *args, **kwargs)
 
@@ -251,14 +251,14 @@ def token_required(f):
 @app.route('/')
 @token_load
 def home(user, security_level):
-    return render_template("index.html", user=user, security_level=security_level,
+    return render_template("indexV3.html", user=user, security_level=security_level,
                            **get_message_jour_context())
 
 
 @app.route('/dashboard')
 @token_load
 def dashboard(user, security_level):
-    return render_template("index.html", user=user, security_level=security_level,
+    return render_template("indexV3.html", user=user, security_level=security_level,
                            **get_message_jour_context())
 
 
@@ -287,13 +287,13 @@ def message_du_jour(user, security_level):
     print("/message_du_jour")
     message = request.form['message_du_jour']
     if not message:
-        return render_template("index.html", user=user, security_level=security_level,
+        return render_template("indexV3.html", user=user, security_level=security_level,
                                **get_message_jour_context(),
                                message="Veuillez entrer un message !")
     print(f"{user=}, {security_level=}, {message=}")
     update_message_du_jour(message, user)
     print(f"{get_message_jour_cont()=}, {get_message_jour_editeur()=}")
-    return render_template("index.html", user=user, security_level=security_level,
+    return render_template("indexV3.html", user=user, security_level=security_level,
                            **get_message_jour_context())
 
 
@@ -302,9 +302,9 @@ def message_du_jour(user, security_level):
 def next_day(user, security_level):
     global jour
     print("/next_day")
-    if jour <= 30:
+    if 1 <= jour <= 30:
         jour += 1
-    return render_template("index.html", user=user, security_level=security_level,
+    return render_template("indexV3.html", user=user, security_level=security_level,
                            **get_message_jour_context())
 
 
@@ -313,9 +313,9 @@ def next_day(user, security_level):
 def prec_day(user, security_level):
     global jour
     print("/prec_day")
-    if jour <= 2:
+    if 2 <= jour <= 31:
         jour -= 1
-    return render_template("index.html", user=user, security_level=security_level,
+    return render_template("indexV3.html", user=user, security_level=security_level,
                            **get_message_jour_context())
 
 
