@@ -172,10 +172,10 @@ def login():
             ph.verify(phash, preal)
         except:
             print('Not good pass')
-            return render_template('login.html', error='Invalid email or password'), 401
+            return render_template('loginV2.html', error='Invalid email or password'), 401
 
         if user is None:  # si mdp de test correspond au mdp user inexistant ...
-            return render_template('login.html', error='Invalid email or password'), 401
+            return render_template('loginV2.html', error='Invalid email or password'), 401
 
         token = jwt.encode({
             'uid': users[user]['uid'],
@@ -196,7 +196,7 @@ def login():
         return response
     else:  # GET
         security_level = get_security_level()
-        return render_template('login.html', security_level=security_level)
+        return render_template('loginV2.html', security_level=security_level)
 
 
 @app.route('/set_level/<int:level>')
@@ -324,4 +324,5 @@ if __name__ == '__main__':
     host = os.getenv("FLASK_HOST")
     port = os.getenv("FLASK_PORT_APP")
     print(f"Starting app on {host}:{port}")
-    app.run(host=host, port=port)
+    is_https: bool = False
+    app.run(host=host, port=port, ssl_context = ("certificates/loutreserver.crt", "certificates/loutreserver.key") if is_https else None)
