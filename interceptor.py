@@ -71,4 +71,5 @@ if __name__ == '__main__':
     host = os.getenv("FLASK_HOST")
     port = int(os.getenv("FLASK_PORT_INTERCEPTOR"))
     print(f"Starting interceptor on {host}:{port}")
-    app.run(host=host, port=port)
+    app.run(host=host, port=port,
+            ssl_context=("certificates/loutreserver.crt", "certificates/loutreserver.key"))

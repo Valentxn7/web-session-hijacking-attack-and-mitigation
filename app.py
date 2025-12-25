@@ -16,9 +16,17 @@ app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'changethis'
 app.config['JWT_LIFETIME'] = 3600
 
-users: list[object] = []
-user_email_index = {}
-user_uid_index = {}
+
+class User:
+    def __init__(self, uuid, email: str, name: str, password: str, role: str):
+        self.uuid = uuid
+        self.email = email
+        self.name = name
+        self.password = password
+        self.role = role
+
+
+users: list[User] = []
 jour: int = 28
 MESSAGE_JOUR_EMPTY: str = "Pas de message du jour, rajouter en un !"
 EDITEUR_JOUR_EMPTY: str | None = None
@@ -64,29 +72,83 @@ assert get_message_jour_editeur == EDITEUR_JOUR_EMPTY
 """
 
 
+#########################
+#    DECORATEUR
+#########################
+
+
+def token_load(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user = get_user_from_jwt()
+        security_level = get_security_level()
+        print(f"token_load: user={user}, security_level={security_level}")
+        return f(user, security_level, *args, **kwargs)
+
+    return wrapper
+
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = get_user_from_jwt()
+        if token is None:
+            return render_template('indexV3.html', message='Veuillez vous connecter !'), 401
+        security_level = get_security_level()
+        return f(token, security_level, *args, **kwargs)
+
+    return decorated
+
+
+#########################
+#    USER
+#########################
+
+
+def get_user_by_email(email) -> User | None:
+    print(f"get_user_by_email({email=})")
+    for one_user in users:
+        if one_user.email == email:
+            return one_user
+
+    return None
+
+
+def get_user_by_uuid(uuid4) -> User | None:
+    print(f"get_user_by_uuid({uuid4=})")
+    for one_user in users:
+        if one_user.uuid == uuid4:
+            return one_user
+
+    return None
+
+
 def add_user(email, name, password, role):
-    if user_email_index.get(email) is not None: return -1
-    uid = str(uuid.uuid4())
-    for _ in range(10):
-        if user_uid_index.get(uid) is None: break
-    else:
-        return -2
+    already_exist = get_user_by_email(email)
+    if already_exist is not None: return -1
+
+    uuid4 = str(uuid.uuid4())
     hashed_password = ph.hash(password)
-    users.append({
-        'uid': uid,
-        'email': email,
-        'name': name,
-        'password': hashed_password,
-        'role': role,
-    })
-    user_email_index[email] = len(users) - 1
-    user_uid_index[uid] = len(users) - 1
+    users.append(User(uuid4, email, name, hashed_password, role))
+    return 1
+
+
+def change_user_credentials(user_logged, email, password) -> int:
+    print(f"change_user_credentials({user_logged=}, {email=}, {password=})")
+    old_email = user_logged.email
+
+    hashed_password = ph.hash(password)
+    for one_user in users:
+        if one_user.email == old_email:
+            one_user.email = email
+            one_user.password = hashed_password
+            break
     return 1
 
 
 assert add_user('luc@mail.com', 'luc', '1uC', 'user') == 1
 assert add_user('eli@mail.com', 'eli', '3L1', 'admin') == 1
-assert add_user('val@gmail.com', 'val', 'jwt', 'admin') == 1
+assert add_user('val@gmail.com', 'val', 'val', 'admin') == 1
 assert add_user('hacker@gmail.com', 'XxUnknowUserxX', 'hacker', 'user') == 1
 
 
@@ -120,24 +182,31 @@ def set_jwt_by_level(response, key, value, level):
     4:
     httponly=True + secure=True + samesite='Strict'
     Maximum de protection
+    5:
+    jinja2 sanitize et empeche l'injection xss
     """
     cookie_configs = {
         1: {  # Niveau 1 : Totalement vulnérable
             'httponly': False,
-            'secure': False,
-            'samesite': None,
+            'secure': True,
+            'samesite': 'None',
         },
         2: {  # Niveau 2 : HttpOnly activé
             'httponly': True,
-            'secure': False,
-            'samesite': None,
+            'secure': True,
+            'samesite': 'None',
         },
         3: {  # Niveau 3 : HttpOnly + SameSite
             'httponly': True,
-            'secure': False,
+            'secure': True,
             'samesite': 'Lax',
         },
         4: {  # Niveau 4 : Sécurité complète
+            'httponly': True,
+            'secure': True,
+            'samesite': 'Strict',
+        },
+        5: {  # Niveau 4 : Sécurité complète + la template jinja2 va sanitize
             'httponly': True,
             'secure': True,
             'samesite': 'Strict',
@@ -163,9 +232,9 @@ def login():
         print(f"POST")
         email = request.form['email']
         password = request.form['password']
-        user = user_email_index.get(email)
+        user = get_user_by_email(email)
 
-        phash = users[user]['password'] if user else dummy_hash
+        phash = user.password if user else dummy_hash
         preal = password if user else 'something else'
 
         try:
@@ -178,7 +247,7 @@ def login():
             return render_template('loginV2.html', error='Invalid email or password'), 401
 
         token = jwt.encode({
-            'uid': users[user]['uid'],
+            'uid': user.uuid,
             'exp': datetime.now(timezone.utc) + timedelta(seconds=app.config['JWT_LIFETIME'])},
             app.config['JWT_SECRET_KEY'], algorithm="HS256")
 
@@ -192,7 +261,7 @@ def login():
         response = set_jwt_by_level(response, 'jwt_token', token, security_level)
 
         # Ici on met juste le niveau de sécurité coté client sans expiration
-        response.set_cookie('security_level', str(security_level), max_age=None)
+        response.set_cookie('security_level', str(security_level), max_age=None, samesite='None', secure=True)
         return response
     else:  # GET
         security_level = get_security_level()
@@ -202,15 +271,15 @@ def login():
 @app.route('/set_level/<int:level>')
 def set_level(level):
     """Endpoint pour changer le niveau de sécurité"""
-    if level not in [1, 2, 3, 4]:
-        return "Niveau invalide (1-4)", 400
+    if level not in [1, 2, 3, 4, 5]:
+        return "Niveau invalide (1-5)", 400
 
     response = make_response(redirect(DIFFILCULTY_ROUTE))
-    response.set_cookie('security_level', str(level), max_age=None)
+    response.set_cookie('security_level', str(level), max_age=None, samesite='None', secure=True)
     return response
 
 
-def get_user_from_jwt():
+def get_user_from_jwt() -> User | None:
     token = request.cookies.get('jwt_token')
     if not token:
         return None
@@ -219,33 +288,8 @@ def get_user_from_jwt():
             token, app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
     except:
         return None
-    current_user = user_uid_index.get(data['uid'])
-    if current_user is None:
-        return None
-    return users[current_user]
 
-
-def token_load(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        user = get_user_from_jwt()
-        security_level = get_security_level()
-        print(f"token_load: user={user}, security_level={security_level}")
-        return f(user, security_level, *args, **kwargs)
-
-    return wrapper
-
-
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = get_user_from_jwt()
-        if token is None:
-            return render_template('indexV3.html', message='Veuillez vous connecter !'), 401
-        security_level = get_security_level()
-        return f(token, security_level, *args, **kwargs)
-
-    return decorated
+    return get_user_by_uuid(data['uid'])
 
 
 @app.route('/')
@@ -319,10 +363,26 @@ def prec_day(user, security_level):
                            **get_message_jour_context())
 
 
+@app.route('/api/change_credential', methods=['POST'])
+@token_required
+def change_credential(user, security_level):
+    print(f"change_credential({user=}, {security_level=})")
+    new_email = request.form['new_email']
+    new_password = request.form['new_password']
+    error = change_user_credentials(user, new_email, new_password)
+    if error == -1: return render_template("indexV3.html", message='Une erreur est survenue', user=user,
+                                           security_level=security_level,
+                                           **get_message_jour_context())
+    print(f"change_credential OK")
+    return render_template("indexV3.html", user=user, security_level=security_level,
+                           **get_message_jour_context())
+
+
 if __name__ == '__main__':
     load_dotenv()
     host = os.getenv("FLASK_HOST")
     port = os.getenv("FLASK_PORT_APP")
     print(f"Starting app on {host}:{port}")
-    is_https: bool = False
-    app.run(host=host, port=port, ssl_context = ("certificates/loutreserver.crt", "certificates/loutreserver.key") if is_https else None)
+    is_https: bool = True
+    app.run(host=host, port=port,
+            ssl_context=("certificates/loutreserver.crt", "certificates/loutreserver.key") if is_https else None)
