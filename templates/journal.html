@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Journal</title>
+    </head>
+    <body>
+        <div id="journal">
+
+            {% if user.journal %}
+               <h3> {{ user.journal }} </h3>
+            {% else %}
+                <h3>Votre journal est vide !</h3>
+            {% endif %}
+
+        </div>
+    </body>
+</html>

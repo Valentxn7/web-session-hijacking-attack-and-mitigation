@@ -18,12 +18,16 @@ app.config['JWT_LIFETIME'] = 3600
 
 
 class User:
-    def __init__(self, uuid, email: str, name: str, password: str, role: str):
+    def __init__(self, uuid, email: str, name: str, password: str, role: str, journal: str = None):
         self.uuid = uuid
         self.email = email
         self.name = name
         self.password = password
         self.role = role
+        self.journal = journal
+
+    def __repr__(self):
+        return f"<User: {self.uuid=} {self.email=} {self.name=} {self.role=} {self.journal=}>"
 
 
 users: list[User] = []
@@ -63,7 +67,7 @@ def get_message_jour_context():
 
 
 def update_message_du_jour(message, user):
-    message_jour_dict[jour] = (message, user['name'])
+    message_jour_dict[jour] = (message, user.name)
 
 
 """
@@ -123,13 +127,13 @@ def get_user_by_uuid(uuid4) -> User | None:
     return None
 
 
-def add_user(email, name, password, role):
+def add_user(email, name, password, role, journal_p = None):
     already_exist = get_user_by_email(email)
     if already_exist is not None: return -1
 
     uuid4 = str(uuid.uuid4())
     hashed_password = ph.hash(password)
-    users.append(User(uuid4, email, name, hashed_password, role))
+    users.append(User(uuid4, email, name, hashed_password, role, journal_p))
     return 1
 
 
@@ -148,7 +152,8 @@ def change_user_credentials(user_logged, email, password) -> int:
 
 assert add_user('luc@mail.com', 'luc', '1uC', 'user') == 1
 assert add_user('eli@mail.com', 'eli', '3L1', 'admin') == 1
-assert add_user('val@gmail.com', 'val', 'val', 'admin') == 1
+assert add_user('val@gmail.com', 'val', 'val', 'admin',
+                "Mon mot de passe maître pour firefox: MonM2PMX1TR3221, ma clé API Discord: D1sCORDAP1K2I") == 1
 assert add_user('hacker@gmail.com', 'XxUnknowUserxX', 'hacker', 'user') == 1
 
 
@@ -181,7 +186,7 @@ def set_jwt_by_level(response, key, value, level):
     samesite='Lax' --> Protection CSRF partielle
     4:
     httponly=True + secure=True + samesite='Strict'
-    Maximum de protection
+    Maximum de protection --> mais tjr XSS pour usurpation d'action
     5:
     jinja2 sanitize et empeche l'injection xss
     """
@@ -191,12 +196,12 @@ def set_jwt_by_level(response, key, value, level):
             'secure': True,
             'samesite': 'None',
         },
-        2: {  # Niveau 2 : HttpOnly activé
+        2: {  # Niveau 2 : HttpOnly activé        VOL COOKIE XSS IMP
             'httponly': True,
             'secure': True,
             'samesite': 'None',
         },
-        3: {  # Niveau 3 : HttpOnly + SameSite
+        3: {  # Niveau 3 : HttpOnly + SameSite     CSRF IMP
             'httponly': True,
             'secure': True,
             'samesite': 'Lax',
@@ -206,7 +211,7 @@ def set_jwt_by_level(response, key, value, level):
             'secure': True,
             'samesite': 'Strict',
         },
-        5: {  # Niveau 4 : Sécurité complète + la template jinja2 va sanitize
+        5: {  # Niveau 5 : Sécurité complète + la template jinja2 va sanitize
             'httponly': True,
             'secure': True,
             'samesite': 'Strict',
@@ -339,6 +344,14 @@ def message_du_jour(user, security_level):
     print(f"{get_message_jour_cont()=}, {get_message_jour_editeur()=}")
     return render_template("indexV3.html", user=user, security_level=security_level,
                            **get_message_jour_context())
+
+
+@app.route('/journal', methods=['GET'])
+@token_required
+def journal(user, security_level):
+    print("/journal")
+    print(f"{user=}, {security_level=}")
+    return render_template("journal.html", user=user)
 
 
 @app.route('/next_day', methods=['GET'])
