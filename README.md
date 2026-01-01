@@ -1,6 +1,8 @@
 # hacking-ethique-vol-de-session
 
-
+https://forum:5000/
+https://malveillance:5001/
+https://mouhaha:5002/
 
 ## Getting started
 
