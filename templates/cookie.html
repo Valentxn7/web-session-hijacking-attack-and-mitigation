@@ -10,7 +10,14 @@
         {% if cookie %}
             {% for gen_key, cookie in cookie.items() %}
                 {% for key, value in cookie.items() %}
+                    {% if key.startswith('/') %}
+                        ==== PAGE ==== <br><br>
+                    {% else %}
+                        ==== COOKIE ==== <br><br>
+                    {% endif %}
+
                     {{ key }} : {{ value }}  <br>
+
                 {% endfor %}
                 --- END --- <br><br>
             {% endfor %}
