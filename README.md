@@ -1,8 +1,66 @@
 # hacking-ethique-vol-de-session
 
-https://forum:5000/
-https://malveillance:5001/
-https://mouhaha:5002/
+https://forum:5000/  
+https://malveillance:5001/  
+https://mouhaha:5002/  
+
+
+## Guide Line
+### 1.Vol cookie: MITM
+
+Prérequis: 
+- Lancer le serveur en HTTP
+- Sécurité 1
+
+explication: avec wireshark, il faut profiter du non chiffrement et de son acceptation pour voler les jwt et se connecter au compte de la victime
+
+
+### 1.5 Prémice PoC: les cookies ne sont pas envoyés en dehors du domaine, comment les exfilter alors ??
+
+Prérequis: 
+- Lancer le serveur en HTTPS
+- sécurité 1
+- Lancer malveillance
+
+explication: prendre le 2eme payload et demander une image à malveillance, ah bah malveillance n'a rien..  
+attendu: une requête qui a juste réchauffée l'océan
+
+### 2. Vol cookie: XSS document.cookies
+
+Prérequis: 
+- Lancer le serveur en HTTPS
+- sécurité 1
+- Lancer malveillance
+
+explication: prendre le 1er payload et le mettre dans un commentaire  
+attendu: malveillance reçoit le cookie de connexion
+
+### 3. Utilisation Cookie: CSRF changement de mdp
+
+Prérequis:
+- sécurité 2
+- Lancer mouhaha /!\ Au moment importun !
+
+explication: se reconnecter avec la bonne sécurité, lancer mouhaha, bravo vous n'avez plus de compte  
+attendu: nouveau credentials: "mouhaha@gmail.com":"mouhaha"
+
+### 4. Utilisation Cookie: XSS journal intime
+
+Prérequis:
+- sécurité 4 (Strict juste pour flex à mort et montrer la puissance XSS)
+- Lancer malveillance
+
+explication: se reconnecter avec la bonne sécurité, mettre le dernière payload et admirer ses plus grands secrets se faire exfiltrer  
+attendu: contenue de la page /journal sur malveillance (différence entre CSRF aveugle et XSS totalement usurpatrice)
+
+### 5. Se mettre en sécurité grâce aux ninjas (jinja2 tu l'as ?)
+
+Prérequis:
+- sécurité 5
+- Lancez ce que vous voulez vous n'aurez plus jamais mes données !!
+
+explication: se reconnecter avec la bonne sécurité, lancer chaque payload dans un jour différent  
+attendu: l'attaquant se retrouve fâce à sa propre stupidité
 
 ## Getting started
 
