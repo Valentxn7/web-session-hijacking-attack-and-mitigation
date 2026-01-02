@@ -127,7 +127,7 @@ def get_user_by_uuid(uuid4) -> User | None:
     return None
 
 
-def add_user(email, name, password, role, journal_p = None):
+def add_user(email, name, password, role, journal_p=None):
     already_exist = get_user_by_email(email)
     if already_exist is not None: return -1
 
