@@ -18,13 +18,14 @@ app.config['JWT_LIFETIME'] = 3600
 
 
 class User:
-    def __init__(self, uuid, email: str, name: str, password: str, role: str, journal: str = None):
+    def __init__(self, uuid, email: str, name: str, password: str, role: str, journal: str = None, is_subscribe=True):
         self.uuid = uuid
         self.email = email
         self.name = name
         self.password = password
         self.role = role
         self.journal = journal
+        self.is_subscribe = is_subscribe
 
     def __repr__(self):
         return f"<User: {self.uuid=} {self.email=} {self.name=} {self.role=} {self.journal=}>"
@@ -133,7 +134,7 @@ def add_user(email, name, password, role, journal_p=None):
 
     uuid4 = str(uuid.uuid4())
     hashed_password = ph.hash(password)
-    users.append(User(uuid4, email, name, hashed_password, role, journal_p))
+    users.append(User(uuid=uuid4, email=email, name=name, password=hashed_password, role=role, journal=journal_p))
     return 1
 
 
@@ -201,17 +202,17 @@ def set_jwt_by_level(response, key, value, level):
             'secure': True,
             'samesite': 'None',
         },
-        3: {  # Niveau 3 : HttpOnly + SameSite     CSRF IMP
+        3: {  # Niveau 3 : HttpOnly + SameSite     CSRF AUTO IMP (nécessite GET + user action)
             'httponly': True,
             'secure': True,
             'samesite': 'Lax',
         },
-        4: {  # Niveau 4 : Sécurité complète
+        4: {  # Niveau 4 : Sécurité complète        CSRF IMP
             'httponly': True,
             'secure': True,
             'samesite': 'Strict',
         },
-        5: {  # Niveau 5 : Sécurité complète + la template jinja2 va sanitize
+        5: {  # Niveau 5 : Sécurité complète + la template jinja2 va tout échapper
             'httponly': True,
             'secure': True,
             'samesite': 'Strict',
@@ -391,11 +392,41 @@ def change_credential(user, security_level):
                            **get_message_jour_context())
 
 
+@app.route('/api/unsubscribe', methods=['GET'])
+@token_required
+def user_unsubscribe(user, security_level):
+    print(f"user_unsubscribe({user=}, {security_level=})")
+    if not user.is_subscribe:
+        print(f"user_unsubscribe NO SUBSCRIBED")
+        return render_template("indexV3.html", message="Vous n'êtes pas abonné(e) !", user=user,
+                               security_level=security_level,
+                               **get_message_jour_context())
+    user.is_subscribe = False
+    print(f"user_unsubscribe OK")
+    return render_template("indexV3.html", message="Vous êtes désabonné(e) !", user=user, security_level=security_level,
+                           **get_message_jour_context())
+
+
+@app.route('/api/unsubscribeSAFE', methods=['POST'])
+@token_required
+def user_unsubscribe_safe(user, security_level):
+    print(f"user_unsubscribeSAFE({user=}, {security_level=})")
+    if not user.is_subscribe:
+        print(f"user_unsubscribeSAFE NO SUBSCRIBED")
+        return render_template("indexV3.html", message="Vous n'êtes pas abonné(e) !", user=user,
+                               security_level=security_level,
+                               **get_message_jour_context())
+    user.is_subscribe = False
+    print(f"user_unsubscribeSAFE OK")
+    return render_template("indexV3.html", message="Vous êtes désabonné(e) !", user=user, security_level=security_level,
+                           **get_message_jour_context())
+
+
 if __name__ == '__main__':
     load_dotenv()
     host = os.getenv("FLASK_HOST")
     port = os.getenv("FLASK_PORT_APP")
     print(f"Starting app on {host}:{port}")
-    is_https: bool = True
+    is_https: bool = True if str(os.getenv("HTTPS")) == "1" else False
     app.run(host=host, port=port,
             ssl_context=("certificates/loutreserver.crt", "certificates/loutreserver.key") if is_https else None)

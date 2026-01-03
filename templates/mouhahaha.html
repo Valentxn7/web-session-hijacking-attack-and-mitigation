@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mouhahaha</title>
+    </head>
+    <body>
+        <h2>
+        Un iPhone gratuit mais...<br>
+        La planète va être exonérée de loutres !<br>
+        <a href="https://forum:5000/api/unsubscribe">Cliquez ici pour gagner un iPhone</a><br>
+        </h2>
+        <br>
+        <h3>Explications: </h3> <br>
+        <br>
+        &lt;script&gt;<br>
+            fetch("https://forum:5000/api/unsubscribe", {<br>
+              method: "POST",<br>
+              credentials: "include"<br>
+            });<br>
+        &lt;/script&gt;<br>
+        Bloqué car requête POST venant d'un autre domaine --> Lax le bloque.<br>
+        <br>
+        ---<br>
+        <br>
+        &lt;script&gt;<br>
+            fetch("https://forum:5000/api/unsubscribe", {<br>
+              method: "GET",<br>
+              credentials: "include"<br>
+            });<br>
+        &lt;/script&gt;<br>
+        Bloqué car malgré le GET, aucune action user --> Lax le bloque.<br>
+        <br>
+        ---<br>
+        <br>
+        &lt;a href="https://forum:5000/api/unsubscribe"&gt;Cliquez ici pour gagner un iPhone&lt;/a&gt;<br>
+        Lax fournit les cookies si : navigation top-level + initiée par utilisateur + GET<br>
+        Nous avons bien un lien GET donc avec une action user --> navigation top-level --> Lax fournit le cookie.<br>
+        navigation top-level: le document principal change / le navigateur quitte la page actuelle / URL visible change  --> C’est la navigation “normale” d’un utilisateur.<br>
+        initié une navigation top-level: &lt;a&gt; / window.location après clic / form GET<br>
+    </body>
+</html>
