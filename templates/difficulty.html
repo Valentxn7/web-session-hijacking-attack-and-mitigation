@@ -86,6 +86,8 @@
         .level-badge.level-2 { background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%); }
         .level-badge.level-3 { background: linear-gradient(135deg, #fbc02d 0%, #fdd835 100%); }
         .level-badge.level-4 { background: linear-gradient(135deg, #388e3c 0%, #66bb6a 100%); }
+        .level-badge.level-5 { background: linear-gradient(135deg, #1e88e5 0%, #90caf9 100%); }
+
 
         .levels-grid {
             display: grid;
@@ -178,6 +180,7 @@
         .level-2 .level-number { background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%); }
         .level-3 .level-number { background: linear-gradient(135deg, #fbc02d 0%, #fdd835 100%); }
         .level-4 .level-number { background: linear-gradient(135deg, #388e3c 0%, #66bb6a 100%); }
+        .level-5 .level-number { background: linear-gradient(135deg, #1e88e5 0%, #90caf9 100%); }
 
         .level-title {
             flex: 1;
@@ -394,7 +397,7 @@
                     </div>
                 </div>
                 <p class="level-description">
-                    Tu as créé un sanctuaire sous-marin parfait ! Tes cookies sont dans un coffre fort au fond de l'océan, protégés de tous les dangers.
+                    Tu as créé un sanctuaire sous-marin ! Tes cookies sont dans un coffre fort au fond de l'océan.
                 </p>
                 <ul class="level-features">
                     <li class="safe">httponly: True - Coffre verrouillé</li>
@@ -402,18 +405,39 @@
                     <li class="safe">samesite: Strict - Grand récif barrière</li>
                 </ul>
             </a>
+
+            <!-- Niveau 5 -->
+            <a href="/set_level/5" class="level-card level-5 {% if security_level == 5 %}active{% endif %}">
+                <div class="level-header">
+                    <div class="level-number">5</div>
+                    <div class="level-title">
+                        <h3>Loutre Boutier</h3>
+                        <span class="status">🎓 Sanctuaire parfaitement parfait</span>
+                    </div>
+                </div>
+                <p class="level-description">
+                    Tu as créé un sanctuaire sous-marin parfaitement parfait ! Tes cookies sont dans un coffre fort au fond de l'océan, protégés de tous les dangers.
+                </p>
+                <ul class="level-features">
+                    <li class="safe">httponly: True - Coffre verrouillé</li>
+                    <li class="safe">secure: True - Eaux cristallines</li>
+                    <li class="safe">samesite: Strict - Grand récif barrière</li>
+                    <li class="safe">Échappement : jinja2 - Ignore même les attaques gourmandes</li>
+                </ul>
+            </a>
         </div>
 
         <div class="info-box">
             <h3>Guide de survie aquatique pour loutres</h3>
-            <p><strong>🦈 httponly:</strong> Empêche les requins JavaScript d'accéder à tes précieux coquillages (protection contre XSS)</p>
-            <p><strong>🌊 secure:</strong> Tes coquillages ne voyagent que dans les eaux cristallines HTTPS, jamais dans les eaux troubles (protection contre interception)</p>
+            <p><strong>🦈 httponly:</strong> Empêche les requins JavaScript d'accéder à tes précieux cookies (protection contre XSS)</p>
+            <p><strong>🌊 secure:</strong> Tes cookies ne voyagent que dans les eaux cristallines HTTPS, jamais dans les eaux troubles (protection contre interception)</p>
             <p><strong>🪸 samesite:</strong> Ton récif protecteur qui contrôle qui peut approcher de ton territoire (protection CSRF)</p>
             <ul>
                 <li><strong>None:</strong> Pas de récif - tout le monde peut passer</li>
                 <li><strong>Lax:</strong> Petit récif - seuls les visiteurs amicaux de la surface peuvent entrer</li>
                 <li><strong>Strict:</strong> Grand récif barrière - personne d'extérieur ne peut approcher</li>
             </ul>
+            <p><strong>🥷 échappement:</strong> L’auto-escaping de Jinja2 neutralise les injections HTML classiques</p>
         </div>
 
         <a href="/" class="back-link">Retour à la surface</a>

@@ -15,7 +15,7 @@ dummy_hash = ph.hash('this is a dummy')
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'changethis'
 app.config['JWT_LIFETIME'] = 3600
-
+LEVEL_POSSIBLE = [1, 2, 3, 4, 5]
 
 class User:
     def __init__(self, uuid, email: str, name: str, password: str, role: str, journal: str = None, is_subscribe=True):
@@ -164,7 +164,7 @@ def get_security_level() -> int:
     level = request.cookies.get('security_level', '1')
     try:
         level = int(level)
-        if level not in [1, 2, 3, 4]:
+        if level not in LEVEL_POSSIBLE:
             level = 1
     except ValueError:
         level = 1
@@ -277,7 +277,7 @@ def login():
 @app.route('/set_level/<int:level>')
 def set_level(level):
     """Endpoint pour changer le niveau de sécurité"""
-    if level not in [1, 2, 3, 4, 5]:
+    if level not in LEVEL_POSSIBLE:
         return "Niveau invalide (1-5)", 400
 
     response = make_response(redirect(DIFFILCULTY_ROUTE))
