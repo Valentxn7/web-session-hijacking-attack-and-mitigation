@@ -73,7 +73,7 @@ Prérequis:
 - Lancer malveillance
 
 explication: prendre le 2eme payload et demander une image à malveillance, ah bah malveillance n'a rien..  
-attendu: une requête qui a juste réchauffée l'océan
+attendu: une requête qui a juste réchauffé l'océan
 
 ### 2. Vol cookie: XSS document.cookies
 
@@ -101,7 +101,7 @@ Prérequis:
 - Lancer mouhahaha
 
 explication: se reconnecter avec la bonne sécurité, lancer mouhahaha, cliquer sur le lien
-attendu: Vous êtes maintenant désabonné car vous avez été leurré. Dans votre malheur, vous avez la chance que notre site utilise un message explicite à votre demande 'Vous êtes désabonné(e) !' au lieu que la majorité des sites qui redirige vers un message général comme "Votre demande a été prise en compte" où l'utilisateur ne se rend pas compte directement qu'il a été trompé et croit toujours avoir participer à un jeux concours par exemple.
+attendu: Vous êtes maintenant désabonné car vous avez été leurré. Dans votre malheur, vous avez la chance que notre site utilise un message explicite à votre demande 'Vous êtes désabonné(e) !' au lieu que la majorité des sites qui redirige vers un message général comme "Votre demande a été prise en compte" où l'utilisateur ne se rend pas compte directement qu'il a été trompé et croit toujours avoir participé à un jeux concours par exemple.
 
 ### 5. Utilisation Cookie: XSS journal intime
 
