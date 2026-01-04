@@ -7,9 +7,16 @@ https://mouhahaha:5003/
 
 # Réserver les noms de domaines locaux
 
+Le fichier hosts se trouve dans:
 ## Windows
+```
+C:\Windows\System32\drivers\etc\hosts
+```
 
-### C:\Windows\System32\drivers\etc\hosts
+## Linux, MacOS et autres UNIX
+```
+/etc/hosts
+```
 
 Ajouter dans ce fichier:
 ```
@@ -18,19 +25,22 @@ Ajouter dans ce fichier:
 127.0.0.1   mouhaha
 127.0.0.1   mouhahaha
 ```
+
+Veillez à bien remettre ce fichier tel qu'il était après avoir terminé la démo.
+
 # Lancer la démo
 ```
 git clone lerepo
 python -m venv venv
 pip install -m requirements
 ```
-Pour lancer forum:
+Pour lancer forum en HTTPS:
 ```
-flask run
+HTTPS=1 flask run
 ```
 Pour changer entre HTTP et HTTPS:
 ```
-Changer l'attribut HTTPS dans les variables d'envrionnement: 1 pour HTTPS, 0 pour HTTP
+HTTPS=0 flask run
 ```
 Pour lancer malveillance:
 ```
