@@ -45,7 +45,7 @@ On configure Wireshark pour écouter sur le port qui communique avec la victime.
 On filtre les paquets réseau qui nous intéressent:
 
 ```
-http and ip.addr == 192.168.1.0/24
+http and ip.addr == 192.168.1.0/23
 ```
 
 et on crée une colonne avec pour champ `http.cookie` et titre `Cookies`.
