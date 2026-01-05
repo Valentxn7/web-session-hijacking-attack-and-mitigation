@@ -36,23 +36,23 @@ pip install -m requirements
 ```
 Pour lancer forum en HTTPS:
 ```
-HTTPS=1 flask run
+HTTPS=1 python app.py
 ```
 Pour changer entre HTTP et HTTPS:
 ```
-HTTPS=0 flask run
+HTTPS=0 python app.py
 ```
 Pour lancer malveillance:
 ```
-flask run malveillance:app
+python interceptor.py
 ```
 Pour lancer mouhaha:
 ```
-flask run mouhaha:app
+python mouhaha.py
 ```
 Pour lancer mouhahaha:
 ```
-flask run mouhahaha:app
+python mouhahaha.py
 ```
 
 ## Guide Line
