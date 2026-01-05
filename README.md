@@ -63,6 +63,7 @@ Prérequis:
 - Sécurité 1
 
 explication: avec wireshark, il faut profiter du non chiffrement et de son acceptation pour voler les jwt et se connecter au compte de la victime
+voir: [mitm.md](mitm.md)
 
 
 ### 1.5 Prémice PoC: les cookies ne sont pas envoyés en dehors du domaine, comment les exfilter alors ??
