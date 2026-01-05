@@ -32,7 +32,7 @@ Veillez à bien remettre ce fichier tel qu'il était après avoir terminé la d�
 ```
 git clone lerepo
 python -m venv venv
-pip install -m requirements
+pip install -m requirements.txt
 ```
 Pour lancer forum en HTTPS:
 ```
