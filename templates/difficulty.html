@@ -345,7 +345,7 @@
                 <ul class="level-features">
                     <li class="danger">httponly: False - Les requins JS peuvent voir tes cookies</li>
                     <li class="danger">secure: False - Tu nages en eau trouble</li>
-                    <li class="danger">samesite: None - Aucune barrière de récif</li>
+                    <li class="danger">samesite: Lax - (barrière minimal pour aller avec secure à False)</li>
                 </ul>
             </a>
 
@@ -362,8 +362,8 @@
                     Tu commences à cacher tes cookies sous l'eau ! Le JavaScript ne peut plus les voir, mais attention aux courants croisés.
                 </p>
                 <ul class="level-features">
-                    <li class="safe">httponly: True - Coquillages cachés des requins JS</li>
-                    <li class="danger">secure: False - Toujours en eau trouble</li>
+                    <li class="safe">httponly: True - Coquillages bien cachés</li>
+                    <li class="danger">secure: True - Eaux cristallines</li>
                     <li class="danger">samesite: None - Pas de récif protecteur</li>
                 </ul>
             </a>
@@ -382,7 +382,7 @@
                 </p>
                 <ul class="level-features">
                     <li class="safe">httponly: True - Coquillages bien cachés</li>
-                    <li class="danger">secure: False - Pas encore en eau claire</li>
+                    <li class="danger">secure: True - Eaux cristallines</li>
                     <li class="warning">samesite: Lax - Petit récif protecteur</li>
                 </ul>
             </a>
@@ -400,7 +400,7 @@
                     Tu as créé un sanctuaire sous-marin ! Tes cookies sont dans un coffre fort au fond de l'océan.
                 </p>
                 <ul class="level-features">
-                    <li class="safe">httponly: True - Coffre verrouillé</li>
+                    <li class="safe">httponly: True - Coquillages bien cachés</li>
                     <li class="safe">secure: True - Eaux cristallines</li>
                     <li class="safe">samesite: Strict - Grand récif barrière</li>
                 </ul>
@@ -419,7 +419,7 @@
                     Tu as créé un sanctuaire sous-marin parfaitement parfait ! Tes cookies sont dans un coffre fort au fond de l'océan, protégés de tous les dangers.
                 </p>
                 <ul class="level-features">
-                    <li class="safe">httponly: True - Coffre verrouillé</li>
+                    <li class="safe">httponly: True - Coquillages bien cachés</li>
                     <li class="safe">secure: True - Eaux cristallines</li>
                     <li class="safe">samesite: Strict - Grand récif barrière</li>
                     <li class="safe">Échappement : jinja2 - Ignore même les attaques gourmandes</li>
