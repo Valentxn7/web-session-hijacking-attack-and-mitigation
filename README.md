@@ -45,7 +45,7 @@ source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Pour lancer forum en HTTPS/HTTP:
+## Pour lancer `forum` en HTTPS/HTTP:
 
 ### HTTPS
 
@@ -63,17 +63,17 @@ Dans le `.env`
 HTTPS=0
 ```
 
-⚠️ Relancer forum par la suite.
+⚠️ Relancer `forum` par la suite.
 
 ## Pour lancer les différentes applications
 
-Pour lancer forum :
+Pour lancer `forum` :
 
 ```
 python3 forum.py
 ```
 
-Pour lancer malveillance :
+Pour lancer `malveillance` :
 
 ```
 python3 malveillance.py
@@ -102,7 +102,7 @@ précédente (mot de passe changé, etc.).
 
 Prérequis :
 
-- Lancer forum en HTTP
+- Lancer `forum` en HTTP
 - Sécurité 1
 
 Explication : se référer au fichier [mitm.md](mitm.md).
@@ -111,23 +111,23 @@ Explication : se référer au fichier [mitm.md](mitm.md).
 
 Prérequis :
 
-- Lancer forum en HTTPS
+- Lancer `forum` en HTTPS
 - Sécurité 2
-- Lancer malveillance
+- Lancer `malveillance`
 
-Explication : prendre le 2e payload et demander une image à malveillance ; ah bah malveillance n’a rien...  
+Explication : prendre le 2e payload et demander une image à `malveillance` ; ah bah `malveillance` n’a rien...  
 Attendu : une requête qui a juste réchauffé l'océan.
 
 ### 2. Vol cookie: XSS document.cookies
 
 Prérequis :
 
-- Lancer forum en HTTPS
+- Lancer `forum` en HTTPS
 - Sécurité 1
-- Lancer malveillance
+- Lancer `malveillance`
 
 Explication : prendre le 1er payload et le mettre dans un commentaire.  
-Attendu : malveillance reçoit le cookie de connexion.
+Attendu : `malveillance` reçoit le cookie de connexion.
 
 ### 3. Utilisation Cookie: CSRF changement de mdp
 
@@ -158,11 +158,11 @@ un jeu concours par exemple.
 Prérequis :
 
 - Sécurité 4 (Strict juste pour montrer la puissance de l'injection XSS)
-- Lancer malveillance
+- Lancer `malveillance`
 
 Explication : se reconnecter avec la bonne sécurité, mettre le dernier payload et admirer ses plus grands secrets se
 faire exfiltrer.  
-Attendu : contenue de la page /journal sur malveillance (différence entre CSRF aveugle et XSS totalement usurpatrice).
+Attendu : contenue de la page /journal sur `malveillance` (différence entre CSRF aveugle et XSS totalement usurpatrice).
 
 ### 6. Se mettre en sécurité grâce aux ninjas (jinja2)
 
