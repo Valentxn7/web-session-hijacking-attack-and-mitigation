@@ -1,6 +1,7 @@
 # Hacking éthique : vol de session
 
-https://forum:5000/  
+http://forum:5000/ (HTTP)  
+https://forum:5000/ (HTTPS)  
 https://malveillance:5001/  
 https://mouhaha:5002/  
 https://mouhahaha:5003/
@@ -38,14 +39,13 @@ Veillez à bien remettre ce fichier tel qu'il était après avoir terminé la d�
 
 ```
 git clone git@gibson.telecomnancy.univ-lorraine.fr:matteo.pouillat/hacking-ethique-vol-de-session.git
-(ou utiliser le zip fourni)
+# (ou utiliser le zip fourni)
 python -m venv venv
-./venv/bin/activate
 source ./venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Pour lancer `forum` en HTTPS/HTTP:
+## Pour lancer `forum` en HTTPS/HTTP :
 
 ### HTTPS
 
@@ -91,6 +91,29 @@ Pour lancer `mouhahaha`:
 python3 mouhahaha.py
 ```
 
+#### Et ensuite lancer l'application dans votre navigateur (les liens sont au début de ce fichier)
+
+## Vos comptes à dispositions
+
+### Compte utilisateur (val)
+
+Il sera votre compte principal pour ce démonstrateur :
+
+```
+Email: val@gmail.com
+Mot de passe: val
+```
+
+### Compte attaquant (hacker)
+
+Si vous souhaitez faire une attaque réaliste, pour par exemple, déployer les injections XSS avec le compte hacker, se
+déconnecter, et se faire piéger en se reconnectant avec votre compte utilisateur.
+
+```
+Email: hacker@gmail.com
+Mot de passe: hacker
+```
+
 ## Guideline
 
 ### ⚠️
@@ -134,7 +157,7 @@ Attendu : `malveillance` reçoit le cookie de connexion.
 Prérequis :
 
 - Sécurité 2
-- Lancer `mouhaha` ⚠️ Au moment importun !
+- Lancer `mouhaha` ⚠️ Au moment opportun !
 
 Explication : se reconnecter avec la bonne sécurité, lancer `mouhaha`, bravo, vous n'avez plus de compte.  
 Attendu : nouveaux identifiants : "mouhaha@gmail.com" : "mouhaha".
