@@ -194,8 +194,8 @@ def set_jwt_by_level(response, key, value, level):
     cookie_configs = {
         1: {  # Niveau 1 : Totalement vulnérable
             'httponly': False,
-            'secure': True,
-            'samesite': 'None',
+            'secure': False,
+            'samesite': 'Lax',
         },
         2: {  # Niveau 2 : HttpOnly activé        VOL COOKIE XSS IMP
             'httponly': True,
