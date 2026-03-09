@@ -6,8 +6,6 @@ https://malveillance:5001/
 https://mouhaha:5002/  
 https://mouhahaha:5003/
 
-GitLab : [lien du répertoire](https://gibson.telecomnancy.univ-lorraine.fr/matteo.pouillat/hacking-ethique-vol-de-session)
-
 # Réserver les noms de domaines locaux
 
 ## Le fichier hosts se trouve dans:
@@ -40,7 +38,7 @@ Veillez à bien remettre ce fichier tel qu'il était après avoir terminé la d�
 ## Initialisation
 
 ```
-git clone git@gibson.telecomnancy.univ-lorraine.fr:matteo.pouillat/hacking-ethique-vol-de-session.git
+git clone git@github.com:Valentxn7/web-session-hijacking-attack-and-mitigation.git
 # (ou utiliser le zip fourni)
 python -m venv venv
 source ./venv/bin/activate
